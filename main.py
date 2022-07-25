@@ -16,7 +16,8 @@ clock = pygame.time.Clock()
 
 # Initialize game objects
 pts = []
-for i in range(500):
+pt_count = 500
+for i in range(pt_count):
     pts.append(
         Particle(randint(10,width-10),randint(10,height-10),5)
     )
@@ -36,17 +37,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if mouse.get_pressed()[0]:
+            if mouse.get_pressed()[0]: # Insert particle when right click
                 mx,my = mouse.get_pos()
                 pts.append(
                     Particle(mx,my,5)
                 )
-                #quadtree.insert(pts[-1])
-            elif mouse.get_pressed()[2]:
+            elif mouse.get_pressed()[2]: # Toggle quadtree when left click
                 quadtree_checker  = not quadtree_checker 
-            #elif mouse.get_pressed()[2]:
-            #    mx,my = mouse.get_pos()
-            #    box_checker.x, box_checker.y = mx-box_checker.w//2,my-box_checker.h//2
 
     pygame.display.flip()
 
@@ -56,8 +53,8 @@ while running:
         pt.apply_pbc(width,height)
         quadtree.insert(pt)
 
-    if quadtree_checker:
-        search_box = Rectangle(0,0,40,40)
+    if quadtree_checker: # Collision detection code
+        search_box = Rectangle(0,0,15,15)
         for pt1 in pts:
             search_box.x = pt1.x - search_box.w/2
             search_box.y = pt1.y - search_box.h/2
@@ -74,7 +71,7 @@ while running:
     screen.fill(Color(0,0,0))
     for pt in pts:
         pt.draw(screen)
-    #quadtree.draw(screen)
+    quadtree.draw(screen)
     
     # Display collision check mode 
     mode = 'ON' if quadtree_checker else 'OFF'

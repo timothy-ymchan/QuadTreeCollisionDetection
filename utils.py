@@ -34,7 +34,6 @@ def HSV2RGB(h,s,v):
     m = M*(1-s)
 
     k = abs((h/60) % 2 -1)
-    #print((h/60) % 2)
     z = (M-m)*(1-k)
     h %= 360
 

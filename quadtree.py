@@ -54,14 +54,12 @@ class Quadtree:
             node.draw(screen)    
     
     def insert(self,point):
-        lv_sep = '--'*self.depth
         self.points.append(point)
         self.point_count += 1 # Count all points under the box
 
-        #print(f'{lv_sep}Points list: ',self.points)
         if self.point_count > self.cap:
             # Create a new layer of recursion and transfer the points to child
-            #print(f'{lv_sep}Recursion!!')
+
             # If no child, create child
             if len(self.nodes.keys()) == 0:
                 x,y,w,h = self.box.x, self.box.y, self.box.w, self.box.h
@@ -69,15 +67,11 @@ class Quadtree:
                 self.nodes['NE'] = Quadtree(Rectangle(x+w/2,y,w/2,h/2),cap=self.cap,depth=self.depth+1)
                 self.nodes['SW'] = Quadtree(Rectangle(x,y+h/2,w/2,h/2),cap=self.cap,depth=self.depth+1)
                 self.nodes['SE'] = Quadtree(Rectangle(x+w/2,y+h/2,w/2,h/2),cap=self.cap,depth=self.depth+1)
-                #print(f'{lv_sep}Created new subtrees')
 
             # Recursive insert
             inserted = False
-            #print(f'{lv_sep}Recursive insert: ')
             for pt in self.points:
-                #print(f'{lv_sep}Point: ',pt)
                 for key, node in self.nodes.items():
-                    #print(f'{lv_sep}\tkey: ',key,'in box ',in_rect(pt,node.box))
                     if in_rect(pt,node.box):
                         node.insert(pt)
                         inserted = True

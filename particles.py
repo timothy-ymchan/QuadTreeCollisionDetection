@@ -52,18 +52,15 @@ def UpdateCollision(part1,part2):
     vproj2x,vproj2y = nx*dot2/n2, ny*dot2/n2
 
     # Update velocity
-    #print('Before: ', part1.vx**2 + part1.vy**2 + part2.vx**2 + part2.vy**2)
     part1.vx += -vproj1x + vproj2x
     part1.vy += -vproj1y + vproj2y
     part2.vx += +vproj1x - vproj2x
     part2.vy += +vproj1y - vproj2y
-    #print('After: ', part1.vx**2 + part1.vy**2 + part2.vx**2 + part2.vy**2)
 
     # Final seperation vector 
     a = 1.0*(part1.a + part2.a)
     ax = nx*a/n
     ay = ny*a/n
-    #print(ax*ax+ay*ay)
 
     # Displace particles so that CM unchange (Assume equal mass)
     part1.x += 0.5*(nx-ax)
