@@ -1,7 +1,7 @@
 import pygame, sys
 from random import randint 
 from particles import Particle, CheckCollision, UpdateCollision
-from pygame import Color
+from pygame import Color, mouse
 
 
 size = width, height = 600,400
@@ -13,10 +13,10 @@ clock = pygame.time.Clock()
 
 # Initialize game objects
 pts = []
-for i in range(500):
-    pts.append(
-        Particle(randint(0,width),randint(0,height),5)
-    )
+#for i in range(500):
+#    pts.append(
+#        Particle(randint(0,width),randint(0,height),5)
+#    )
 
 # Game loop
 running = True
@@ -29,6 +29,12 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if mouse.get_pressed()[0]:
+                mx,my = mouse.get_pos()
+                pts.append(
+                    Particle(mx,my,5)
+                )
     
     # Draw loop
     screen.fill(Color(0,0,0))
