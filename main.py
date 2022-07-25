@@ -2,9 +2,10 @@ import pygame, sys
 from random import randint 
 from particles import Particle, CheckCollision, UpdateCollision
 from pygame import Color, mouse
+from quadtree import Quadtree, Rectangle
 
 
-size = width, height = 600,400
+size = width, height = 600,600
 
 # Initialize pygame and screen
 pygame.init()
@@ -17,6 +18,7 @@ pts = []
 #    pts.append(
 #        Particle(randint(0,width),randint(0,height),5)
 #    )
+quadtree = Quadtree(Rectangle(0,0,width,height))
 
 # Game loop
 running = True
@@ -35,11 +37,13 @@ while running:
                 pts.append(
                     Particle(mx,my,5)
                 )
+                quadtree.insert(pts[-1])
     
     # Draw loop
     screen.fill(Color(0,0,0))
     for pt in pts:
         pt.draw(screen)
+    quadtree.draw(screen)
 
     pygame.display.flip()
 
@@ -47,7 +51,7 @@ while running:
     for pt in pts:
         pt.update(dt)
         pt.apply_pbc(width,height)
-    
+
     for i in range(len(pts)):
         for j in range(i+1,len(pts)):
             if CheckCollision(pts[i],pts[j]):
