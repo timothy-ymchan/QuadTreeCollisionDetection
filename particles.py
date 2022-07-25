@@ -12,8 +12,8 @@ class Particle:
         self.a = a
         self.color = [int(val) for val in HSV2RGB(random.randint(0,360),1,1)]
         #print(self.color)
-        self.vx = 0*BoxMullerNormal()
-        self.vy = 0*BoxMullerNormal()
+        self.vx = 50*BoxMullerNormal()
+        self.vy = 50*BoxMullerNormal()
 
     def draw(self,screen):
         circle(

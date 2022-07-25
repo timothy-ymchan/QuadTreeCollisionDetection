@@ -10,15 +10,17 @@ size = width, height = 600,600
 # Initialize pygame and screen
 pygame.init()
 screen = pygame.display.set_mode(size=size)
+pygame.display.set_caption('2D n-body collision')
 clock = pygame.time.Clock()
 
 # Initialize game objects
 pts = []
-#for i in range(500):
-#    pts.append(
-#        Particle(randint(0,width),randint(0,height),5)
-#    )
-quadtree = Quadtree(Rectangle(0,0,width,height))
+for i in range(500):
+    pts.append(
+        Particle(randint(10,width-10),randint(10,height-10),5)
+    )
+#box_checker = Rectangle(width//2-10//2,height//2-10//2,40,40)
+quadtree_checker = False
 
 # Game loop
 running = True
@@ -28,6 +30,7 @@ while running:
     dt = clock.tick(120)/1000
     
     # Event loop
+    quadtree = Quadtree(Rectangle(0,0,width,height))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -37,13 +40,12 @@ while running:
                 pts.append(
                     Particle(mx,my,5)
                 )
-                quadtree.insert(pts[-1])
-    
-    # Draw loop
-    screen.fill(Color(0,0,0))
-    for pt in pts:
-        pt.draw(screen)
-    quadtree.draw(screen)
+                #quadtree.insert(pts[-1])
+            elif mouse.get_pressed()[2]:
+                quadtree_checker  = not quadtree_checker 
+            #elif mouse.get_pressed()[2]:
+            #    mx,my = mouse.get_pos()
+            #    box_checker.x, box_checker.y = mx-box_checker.w//2,my-box_checker.h//2
 
     pygame.display.flip()
 
@@ -51,9 +53,30 @@ while running:
     for pt in pts:
         pt.update(dt)
         pt.apply_pbc(width,height)
+        quadtree.insert(pt)
 
-    for i in range(len(pts)):
-        for j in range(i+1,len(pts)):
-            if CheckCollision(pts[i],pts[j]):
-                UpdateCollision(pts[i],pts[j])
+    if quadtree_checker:
+        search_box = Rectangle(0,0,40,40)
+        for pt1 in pts:
+            search_box.x = pt1.x - search_box.w/2
+            search_box.y = pt1.y - search_box.h/2
+            for pt2 in quadtree.get_particle_in_rect(search_box):
+                if CheckCollision(pt1,pt2) and pt1 != pt2:
+                    UpdateCollision(pt1,pt2)
+    else:
+        for i in range(len(pts)):
+            for j in range(i+1,len(pts)):
+                if CheckCollision(pts[i],pts[j]):
+                    UpdateCollision(pts[i],pts[j])
 
+    # Draw loop
+    screen.fill(Color(0,0,0))
+    # Box checker
+    #pygame.draw.rect(screen,(255,0,0),
+    #                pygame.Rect(box_checker.x,box_checker.y,box_checker.w,box_checker.h))
+    for pt in pts:
+        pt.draw(screen)
+    quadtree.draw(screen)
+    
+
+    del quadtree
