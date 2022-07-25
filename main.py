@@ -9,6 +9,7 @@ size = width, height = 600,600
 
 # Initialize pygame and screen
 pygame.init()
+pygame.font.init()
 screen = pygame.display.set_mode(size=size)
 pygame.display.set_caption('2D n-body collision')
 clock = pygame.time.Clock()
@@ -19,8 +20,8 @@ for i in range(500):
     pts.append(
         Particle(randint(10,width-10),randint(10,height-10),5)
     )
-#box_checker = Rectangle(width//2-10//2,height//2-10//2,40,40)
-quadtree_checker = False
+font = pygame.font.SysFont('Comic Sans MS',20)
+quadtree_checker = True
 
 # Game loop
 running = True
@@ -71,12 +72,13 @@ while running:
 
     # Draw loop
     screen.fill(Color(0,0,0))
-    # Box checker
-    #pygame.draw.rect(screen,(255,0,0),
-    #                pygame.Rect(box_checker.x,box_checker.y,box_checker.w,box_checker.h))
     for pt in pts:
         pt.draw(screen)
-    quadtree.draw(screen)
+    #quadtree.draw(screen)
     
+    # Display collision check mode 
+    mode = 'ON' if quadtree_checker else 'OFF'
+    text_surf = font.render(f'QUADTREE: {mode}',True,(255,255,255))
+    screen.blit(text_surf,(0,0))
 
     del quadtree
