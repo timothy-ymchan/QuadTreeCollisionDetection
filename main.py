@@ -6,6 +6,7 @@ from quadtree import Quadtree, Rectangle
 
 
 size = width, height = 600,600
+fps = 120
 
 # Initialize pygame and screen
 pygame.init()
@@ -28,8 +29,8 @@ quadtree_checker = True
 running = True
 while running:
 
-    # 60 FPS
-    dt = clock.tick(120)/1000
+    # Tick according to fps & convert fps to real time in secs
+    dt = clock.tick(fps)/1000
     
     # Event loop
     quadtree = Quadtree(Rectangle(0,0,width,height))
